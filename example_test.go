@@ -1,19 +1,17 @@
-package seal_test
+package seal
 
 import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-
-	"lowbit.dev/seal"
 )
 
 // Example demonstrates sealing a value and opening it again.
 func Example() {
-	key := make([]byte, seal.KeySize)
+	key := make([]byte, KeySize)
 	rand.Read(key)
 
-	s, err := seal.New(key)
+	s, err := New(key)
 	if err != nil {
 		panic(err)
 	}
@@ -28,11 +26,11 @@ func Example() {
 // ExampleSealer_Open_purpose shows that a value only opens for the purpose it
 // was sealed for.
 func ExampleSealer_Open_purpose() {
-	s, _ := seal.New(make([]byte, seal.KeySize))
+	s, _ := New(make([]byte, KeySize))
 
 	sealed := s.Seal([]byte("secret"), "totp:alice")
 
 	_, err := s.Open(sealed, "totp:bob")
-	fmt.Println(errors.Is(err, seal.ErrOpen))
+	fmt.Println(errors.Is(err, ErrOpen))
 	// Output: true
 }
